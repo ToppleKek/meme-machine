@@ -1,0 +1,65 @@
+const youtubedl = require('youtube-dl');
+const ffmpeg = require("fluent-ffmpeg");
+const mainModule = require("../bot.js");
+const CONFIG = require("../config.json");
+const utils = require("./utils.js");
+let bassGain = 25;
+
+module.exports = {
+  downloadYtdl: function (url) {
+    return new Promise(resolve => {
+      youtubedl.exec(url, ["-o", "./audio_cache/%(title)s-%(id)s.%(ext)s", "-f", "best"], {maxBuffer: Infinity}, function exec(err, output) {
+        if (err) console.log("[ERROR] Downloader: " + err);
+        if (output) console.log(output.join('\n'));
+        resolve("Success");
+      });
+    });
+  },
+
+  processVideo: function (client, msg, video, type) {
+    return new Promise(resolve => {
+      let filters = [];
+      if (type.length > CONFIG.maxFilters) utils.sendResponse(msg, "Maximum filters exceeded! Using the first " + CONFIG.maxFilters, "err");
+      for (let i = 0; i < CONFIG.maxFilters; i++) {
+        switch (type[i]) {
+          case "bass":
+            filters.push({
+              filter: "bass",
+              options: "g=" + bassGain + ":f=50"
+            });
+            break;
+          case "echo":
+            filters.push({
+              filter: "aecho",
+              options: "0.8:0.6:1000:0.8"
+            });
+            break;
+          case "ftempo":
+            filters.push({
+              filter: "atempo",
+              options: "1.5"
+            });
+            break;
+          case "stempo":
+            filters.push({
+              filter: "atempo",
+              options: "0.5"
+            });
+            break;
+        }
+      }
+      try {
+      ffmpeg("./audio_cache/" + video).audioFilters(filters)
+        .audioCodec('libmp3lame')
+        .noVideo()
+        .output("./ffmpeg_cache/" + "FFMPEG" + video + ".mp3")
+        .on("end", function () {
+          console.log("[FFMPEG] Finished Processing");
+          resolve("./audio_cache/" + video);
+        })
+        .run();
+    }
+    catch (err) { utils.logError(client, msg, "FFMPEG ERROR", "Ffmpeg threw an error while processing a video! Error: " + err) }
+  });
+  }
+};

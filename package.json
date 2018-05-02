@@ -1,0 +1,43 @@
+{
+  "name": "meme-machine",
+  "version": "0.0.1",
+  "description": "The Meme Machine rewrite",
+  "main": "bot.js",
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "discord.js": "git+https://github.com/discordjs/discord.js.git",
+    "erlpack": "github:discordapp/erlpack",
+    "ffmpeg-binaries": "^3.2.2-3",
+    "fluent-ffmpeg": "^2.1.2",
+    "forever": "^0.15.3",
+    "forever-monitor": "^1.7.1",
+    "google-auth-library": "^0.12.0",
+    "googleapis": "^29.0.0",
+    "is-url": "^1.2.2",
+    "json": "^9.0.6",
+    "node-opus": "^0.2.7",
+    "sodium": "^2.0.3",
+    "uws": "^9.14.0",
+    "valid-url": "^1.0.9",
+    "xmlhttprequest": "^1.8.0",
+    "youtube-dl": "^1.12.2",
+    "youtube-search": "^1.0.10",
+    "ytdl-core": "^0.20.2",
+    "zlib-sync": "^0.1.4"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-config-google": "^0.9.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-standard": "^3.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "TopKek#9999",
+  "license": "MIT"
+}
