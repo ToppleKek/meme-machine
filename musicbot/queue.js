@@ -103,10 +103,17 @@ module.exports = {
           if (Array.isArray(info2)) return;
           let length;
           let thumbnail;
+          let filters;
+
           if (!info2.thumbnail) thumbnail = msg.author.avatarURL({ size: 2048 });
           else thumbnail = info2.thumbnail;
+
           if (!info2._duration_hms) length = 'N/A';
           else length = info2._duration_hms;
+
+          if (!usesFfmpeg) filters = 'None';
+          else filters = usesFfmpeg.join(', ');
+
           const embed = {
             color: 7506394,
             title: 'Added song to queue',
@@ -125,6 +132,10 @@ module.exports = {
             }, {
               name: 'Position in queue', // TODO: make this better, if multiple songs are queued, they all have the same "position" because we're just using the length of the array.
               value: mainModule.queue[msg.guild.id].length - 1,
+              inline: false,
+            }, {
+              name: 'Filters',
+              value: filters,
               inline: false,
             },
             ],

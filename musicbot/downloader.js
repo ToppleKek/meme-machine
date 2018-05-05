@@ -20,7 +20,6 @@ module.exports = {
   processVideo(client, msg, video, type) {
     return new Promise((resolve) => {
       const filters = [];
-      if (type.length > CONFIG.maxFilters) utils.sendResponse(msg, `Maximum filters exceeded! Using the first ${CONFIG.maxFilters}`, 'err');
       for (let i = 0; i < CONFIG.maxFilters; i += 1) {
         switch (type[i]) {
           case 'bass':
@@ -45,6 +44,18 @@ module.exports = {
             filters.push({
               filter: 'atempo',
               options: '0.5',
+            });
+            break;
+          case 'fspeed':
+            filters.push({
+              filter: 'asetrate',
+              options: '60000',
+            });
+            break;
+          case 'sspeed':
+            filters.push({
+              filter: 'asetrate',
+              options: '20000',
             });
             break;
         }

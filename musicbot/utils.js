@@ -98,6 +98,7 @@ module.exports = {
           let dislikes;
           let views;
           let thumbnail;
+          let filters;
 
           if (!info._duration_hms) length = 'N/A';
           else length = info._duration_hms;
@@ -116,6 +117,9 @@ module.exports = {
 
           if (!info.view_count) views = 'N/A';
           else views = info.view_count;
+
+          if (!queue[0].usesFfmpeg) filters = 'None';
+          else filters = queue[0].usesFfmpeg.join(', ');
 
           const embed = {
             color: 7506394,
@@ -139,6 +143,10 @@ module.exports = {
             }, {
               name: 'Video Stats',
               value: `Likes: ${likes} Dislikes: ${dislikes} Views: ${views}`,
+              inline: false,
+            }, {
+              name: 'Filters',
+              value: filters,
               inline: false,
             },
             ],

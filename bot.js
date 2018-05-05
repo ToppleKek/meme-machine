@@ -13,7 +13,7 @@ const { exec } = require('child_process');
 
 const client = new Discord.Client({ autoReconnect: true, disableEveryone: true });
 const commands = {};
-const validFilters = ['bass', 'echo', 'ftempo', 'stempo']; // Put this in config?
+const validFilters = ['bass', 'echo', 'ftempo', 'stempo', 'fspeed', 'sspeed']; // Put this in config?
 const opts = {
   maxResults: 10,
   type: 'video',
@@ -330,8 +330,14 @@ commands.np.main = (msg, hasArgs) => {
   else {
     const time = msg.guild.voiceConnection.dispatcher.streamTime / 1000;
     let totalVideoTime;
+    let filters;
+
     if (exports.queue[msg.guild.id][0].usesFfmpeg) totalVideoTime = `${exports.queue[msg.guild.id][0].length} (There are filters, time may be inaccurate)`;
     else totalVideoTime = exports.queue[msg.guild.id][0].length;
+
+    if (!exports.queue[msg.guild.id][0].usesFfmpeg) filters = 'None';
+    else filters = exports.queue[msg.guild.id][0].usesFfmpeg.join(', ');
+
     const embed = {
       color: 7506394,
       title: 'Currently playing',
@@ -344,7 +350,12 @@ commands.np.main = (msg, hasArgs) => {
         name: 'Progress',
         value: `${secondsToHms(time)}/${totalVideoTime}`,
         inline: false,
-      }],
+      }, {
+        name: 'Filters',
+        value: filters,
+        inline: false,
+      }
+      ],
     };
     msg.channel.send('', { embed });
   }
@@ -582,6 +593,11 @@ commands.fplay.main = (msg, hasArgs) => {
   const strSearchText = msg.content.split('|')[1];
   console.log(strSearchText);
 
+  if (filters.length > CONFIG.maxFilters) {
+    utils.sendResponse(msg, `Maximum filters exceeded! Using the first ${CONFIG.maxFilters}`, 'err');
+    filters.length = 10;
+
+  }
 
   if (msg.attachments.first()) {
     msg.channel.startTyping();
@@ -668,6 +684,12 @@ commands.exec.main = (msg, hasArgs) => {
       }
     });
   }
+};
+
+commands.listfilters = {};
+commands.listfilters.help = 'List available filters';
+commands.listfilters.main = (msg, hasArgs) => {
+  utils.sendResponse(msg, `Filters:\n${validFilters.join('\n')}`, 'info');
 };
 // ---END COMMANDS---
 
