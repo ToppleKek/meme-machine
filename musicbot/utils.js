@@ -71,7 +71,8 @@ module.exports = {
     return new Promise((resolve) => {
       const xhr = new XMLHttpRequest();
       xhr.open('HEAD', url, true);
-      xhr.onreadystatechange = () => {
+      // Ill look into this
+      xhr.onreadystatechange = function () {
         if (this.readyState === this.DONE) {
           console.log(`[DEBUG] Status of XMLHTTPREQUEST: ${this.status}`);
           console.log(`[DEBUG] Content type: ${this.getResponseHeader('Content-Type')}`);
