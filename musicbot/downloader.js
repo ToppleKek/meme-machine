@@ -47,18 +47,13 @@ module.exports = {
               options: '0.5',
             });
             break;
-          default:
-            filters.push({
-              filter: 'bass',
-              options: `g=${bassGain}:f=50`,
-            });
         }
       }
       try {
         ffmpeg(`./audio_cache/${video}`).audioFilters(filters)
           .audioCodec('libmp3lame')
           .noVideo()
-          .output(`./ffmpeg_cache/FFMPEG}${video}.mp3`)
+          .output(`./ffmpeg_cache/FFMPEG${video}.mp3`)
           .on('end', () => {
             console.log('[FFMPEG] Finished Processing');
             resolve(`./audio_cache/${video}`);
