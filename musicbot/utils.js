@@ -71,13 +71,13 @@ module.exports = {
     return new Promise((resolve) => {
       const xhr = new XMLHttpRequest();
       xhr.open('HEAD', url, true);
-      xhr.onreadystatechange = function () {
+      xhr.onreadystatechange = () => {
         if (this.readyState === this.DONE) {
           console.log(`[DEBUG] Status of XMLHTTPREQUEST: ${this.status}`);
           console.log(`[DEBUG] Content type: ${this.getResponseHeader('Content-Type')}`);
           const info = {};
           info.type = this.getResponseHeader('Content-Type');
-          info.size = parseInt(this.getResponseHeader('Content-Length'));
+          info.size = parseInt(this.getResponseHeader('Content-Length'), 10);
           resolve(info);
         }
       };

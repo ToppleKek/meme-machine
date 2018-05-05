@@ -9,7 +9,7 @@ const fs = require('fs');
 const youtubedl = require('youtube-dl'); // This is just for use with eval
 const { exec } = require('child_process');
 
-//TODO catch some promises
+// TODO catch some promises
 
 const client = new Discord.Client({ autoReconnect: true, disableEveryone: true });
 const commands = {};
@@ -24,17 +24,15 @@ module.exports.queue = {};
 
 // ---FUNCTIONS---
 
-String.prototype.toHHMMSS = () => {
-  const secNum = parseInt(this, 10);
-  let hours = Math.floor(secNum / 3600);
-  let minutes = Math.floor((secNum - (hours * 3600)) / 60);
-  let seconds = secNum - (hours * 3600) - (minutes * 60);
+function secondsToHms(d) {
+  d = Number(d);
 
-  if (hours < 10) hours = `0 ${hours}`;
-  if (minutes < 10) minutes = `0 ${minutes}`;
-  if (seconds < 10) seconds = `0 ${seconds}`;
-  return `${hours}:${minutes}:${seconds}`;
-};
+  const h = Math.floor(d / 3600);
+  const m = Math.floor(d % 3600 / 60);
+  const s = Math.floor(d % 3600 % 60);
+
+  return `${(`0${h}`).slice(-2)}:${(`0${m}`).slice(-2)}:${(`0${s}`).slice(-2)}`;
+}
 
 function arrayContainsArray(superset, subset) {
   if (subset.length === 0) return false;
@@ -344,7 +342,7 @@ commands.np.main = (msg, hasArgs) => {
         inline: false,
       }, {
         name: 'Progress',
-        value: `${time.toString().toHHMMSS()}/${totalVideoTime}`,
+        value: `${secondsToHms(time)}/${totalVideoTime}`,
         inline: false,
       }],
     };

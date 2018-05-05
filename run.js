@@ -1,3 +1,3 @@
-const forever = require("forever");
+const forever = require('forever');
 
-forever.start("bot.js", {stream:true});
+forever.start('bot.js', { stream: true });

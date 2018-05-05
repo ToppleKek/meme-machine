@@ -10,5 +10,7 @@ module.exports = {
     "guard-for-in": 0,
     "no-param-reassign": 0,
     "prefer-destructuring": 0,
+    "no-mixed-operators": 0,
+    "no-underscore-dangle": 0,
   }
 };
