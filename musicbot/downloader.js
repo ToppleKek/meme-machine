@@ -58,6 +58,11 @@ module.exports = {
               options: '20000',
             });
             break;
+          case 'vibrato':
+            filters.push({
+              filter: 'vibrato',
+              options: 'f=15:d=0.5'
+            });
         }
       }
       try {

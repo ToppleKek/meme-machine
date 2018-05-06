@@ -13,7 +13,7 @@ const { exec } = require('child_process');
 
 const client = new Discord.Client({ autoReconnect: true, disableEveryone: true });
 const commands = {};
-const validFilters = ['bass', 'echo', 'ftempo', 'stempo', 'fspeed', 'sspeed']; // Put this in config?
+const validFilters = ['bass', 'echo', 'ftempo', 'stempo', 'fspeed', 'sspeed', 'vibrato']; // Put this in config?
 const opts = {
   maxResults: 10,
   type: 'video',
@@ -581,6 +581,11 @@ commands.fplay.main = (msg, hasArgs) => {
 
   if ((filter.match(/bass/g) || []).length > 5) {
     utils.sendResponse(msg, 'Too much bass! Adding too much causes ffmpeg to crash. Please use less than 5', 'err');
+    return;
+  }
+
+  if ((filter.match(/vibrato/g) || []).length > 1) {
+    utils.sendResponse(msg, 'Too much vibrato! Adding more than 1 causes ffmpeg to crash. Please use only 1', 'err');
     return;
   }
 
