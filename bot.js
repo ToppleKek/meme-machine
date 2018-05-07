@@ -235,6 +235,10 @@ commands.volume = {};
 commands.volume.help = 'Sets the volume of the player';
 commands.volume.main = (msg, hasArgs) => {
   if (!msg.guild) return;
+  if (exports.queue[msg.guild.id].volume && !hasArgs) {
+    utils.sendResponse(msg, `Current volume: ${exports.queue[msg.guild.id].volume}%`, 'info');
+    return;
+  }
   if (utils.checkPermission(msg.author, msg, 'admin')) {
     if (!exports.queue[msg.guild.id] || !msg.guild.voiceConnection.dispatcher) {
       const vol = Number(msg.content);
@@ -251,21 +255,18 @@ commands.volume.main = (msg, hasArgs) => {
     } else {
       const connection = msg.guild.voiceConnection;
       const dispatcher = connection.dispatcher;
-      if (!hasArgs) utils.sendResponse(msg, `Current volume: ${dispatcher.volume * 100}%`, 'info');
-      else {
-        const vol = Number(msg.content);
-        if (Number.isNaN(vol)) {
-          utils.sendResponse(msg, 'That is not a number. Please provide a valid number between 1 and 2000', 'err');
-          return;
-        }
-        if (vol < 1 || vol > 2000) {
-          utils.sendResponse(msg, 'Please provide a number between 1 and 2000', 'err');
-          return;
-        }
-        dispatcher.setVolume(vol / 100);
-        exports.queue[msg.guild.id].volume = vol;
-        utils.sendResponse(msg, `Set volume to: ${vol}%`, 'success');
+      const vol = Number(msg.content);
+      if (Number.isNaN(vol)) {
+        utils.sendResponse(msg, 'That is not a number. Please provide a valid number between 1 and 2000', 'err');
+        return;
       }
+      if (vol < 1 || vol > 2000) {
+        utils.sendResponse(msg, 'Please provide a number between 1 and 2000', 'err');
+        return;
+      }
+      dispatcher.setVolume(vol / 100);
+      exports.queue[msg.guild.id].volume = vol;
+      utils.sendResponse(msg, `Set volume to: ${vol}%`, 'success');
     }
   } else utils.sendResponse(msg, 'You do not have permission to use that command. You are missing permission `ADMINISTRATOR`', 'err');
 };
