@@ -8,6 +8,7 @@ const ytSearch = require('youtube-search');
 const fs = require('fs');
 const youtubedl = require('youtube-dl'); // This is just for use with eval
 const { exec } = require('child_process');
+const downloader = require('./musicbot/downloader');
 
 // TODO catch some promises
 
@@ -584,10 +585,13 @@ commands.fplay.main = (msg, hasArgs) => {
     return;
   }
 
-  if ((filter.match(/vibrato/g) || []).length > 1) {
-    utils.sendResponse(msg, 'Too much vibrato! Adding more than 1 causes ffmpeg to crash. Please use only 1', 'err');
+  /*
+  const vibratoCheck = filter.indexOf('vibrato');
+  if (vibratoCheck !== -1 && filters.length > 1) {
+    utils.sendResponse(msg, 'When using the vibrato filter, no other filters can be used (ffmpeg will crash) Please use only vibrato', 'err');
     return;
   }
+  */
 
   if (!arrayContainsArray(validFilters, filters)) {
     utils.sendResponse(msg, `Invalid filter. Valid filters are: ${validFilters.join(', ')}`, 'err');
