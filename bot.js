@@ -250,7 +250,7 @@ commands.volume.main = (msg, hasArgs) => {
       utils.sendResponse(msg, `Set volume to: ${vol}%`, 'success');
     } else {
       const connection = msg.guild.voiceConnection;
-      const { dispatcher } = connection.dispatcher;
+      const dispatcher = connection.dispatcher;
       if (!hasArgs) utils.sendResponse(msg, `Current volume: ${dispatcher.volume * 100}%`, 'info');
       else {
         const vol = Number(msg.content);

@@ -57,39 +57,16 @@ module.exports = {
           resolve('error');
         }
         console.log('[INFO] Converted video to mp3, now applying filters');
-        fs.stat(`./ffmpeg_cache/FFMPEG${video}.mp3`, (err, stats) => {
+        exec(`ffmpeg -y -i "./ffmpeg_cache/PREFFMPEG${video}.mp3" -codec:a libmp3lame -af ${filters.join(',')} "./ffmpeg_cache/FFMPEG${video}.mp3"`, (err, stdout, stderr) => {
+          console.log('Finished Processing');
           if (err) {
-            console.log('NOTUSING -y FILE EXISTS');
-            exec(`ffmpeg -y -i "./ffmpeg_cache/PREFFMPEG${video}.mp3" -codec:a libmp3lame -af ${filters.join(',')} "./ffmpeg_cache/FFMPEG${video}.mp3"`, (err, stdout, stderr) => {
-              console.log('Finished Processing');
-              if (err) {
-                utils.logError(client, msg, 'FFMPEG ERROR', `Ffmpeg threw an error while processing a video! Error: ${err}`);
-                console.log(err);
-                resolve('error');
-              }
-              //if (stderr) utils.logError(client, msg, 'FFMPEG ERROR', `Ffmpeg threw an error while processing a video! Error: ${stderr}`);
-              console.log(stdout);
-              resolve(`./ffmpeg_cache/FFMPEG${video}.mp3`);
-            });
-          } else {
-            console.log('USING -y FILE EXISTS');
-            exec(`rm -f "./ffmpeg_cache/FFMPEG${video}.mp3"`, (err, stdout, stderr) => {
-              if (err) console.log(err);
-              if (stderr) console.log(stderr);
-              console.log('FUCK');
-              exec(`ffmpeg -y -i "./ffmpeg_cache/PREFFMPEG${video}.mp3" -codec:a libmp3lame -af ${filters.join(',')} "./ffmpeg_cache/FFMPEG${video}.mp3"`, (err, stdout, stderr) => {
-                console.log('Finished Processing');
-                if (err) {
-                  utils.logError(client, msg, 'FFMPEG ERROR', `Ffmpeg threw an error while processing a video! Error: ${err}`);
-                  console.log(err);
-                  resolve('error');
-                }
-                //if (stderr) utils.logError(client, msg, 'FFMPEG ERROR', `Ffmpeg threw an error while processing a video! Error: ${stderr}`);
-                console.log(stdout);
-                resolve(`./ffmpeg_cache/FFMPEG${video}.mp3`);
-              });
-            });
+            utils.logError(client, msg, 'FFMPEG ERROR', `Ffmpeg threw an error while processing a video! Error: ${err}`);
+            console.log(err);
+            resolve('error');
           }
+          //if (stderr) utils.logError(client, msg, 'FFMPEG ERROR', `Ffmpeg threw an error while processing a video! Error: ${stderr}`);
+          console.log(stdout);
+          resolve(`./ffmpeg_cache/FFMPEG${video}.mp3`);
         });
       });
     });
