@@ -86,8 +86,10 @@ module.exports = {
 
           const messageToDel = await msg.channel.send('', { embed }).catch((err) => { console.log(`[ERROR] Failed to send nowPlaying response! ${err}`); });
           setTimeout(() => {
-            messageToDel.delete()
-                        .catch(e => console.log(`[ERROR] Failed to delete message: ${e}`));
+            if (embed.delete) {
+              messageToDel.delete()
+                          .catch(e => console.log(`[ERROR] Failed to delete message: ${e}`));
+            }
           }, 10000);
 
           const dispatcher = connection.play(`./ffmpeg_cache/FFMPEG${newQueue[0].filename}.mp3`, {
@@ -116,7 +118,13 @@ module.exports = {
           return;
         }
 
-        msg.channel.send('', { embed }).catch((err) => { console.log(`[ERROR] Failed to send nowPlaying response! ${err}`); });
+        const messageToDel = await msg.channel.send('', { embed }).catch((err) => { console.log(`[ERROR] Failed to send nowPlaying response! ${err}`); });
+        setTimeout(() => {
+          if (embed.delete) {
+            messageToDel.delete()
+                        .catch(e => console.log(`[ERROR] Failed to delete message: ${e}`));
+          }
+        }, 10000);
 
         const dispatcher = connection.play(`./audio_cache/${newQueue[0].filename}`, {
           volume: newQueue.volume / 100,
@@ -142,7 +150,13 @@ module.exports = {
 
       await downloader.processVideo(client, msg, newQueue[0].filename, newQueue[0].usesFfmpeg);
 
-      msg.channel.send('', { embed }).catch((err) => { console.log(`[ERROR] Failed to send nowPlaying response! ${err}`); });
+      const messageToDel = await msg.channel.send('', { embed }).catch((err) => { console.log(`[ERROR] Failed to send nowPlaying response! ${err}`); });
+      setTimeout(() => {
+        if (embed.delete) {
+          messageToDel.delete()
+                      .catch(e => console.log(`[ERROR] Failed to delete message: ${e}`));
+        }
+      }, 10000);
 
       const dispatcher = connection.play(`./ffmpeg_cache/FFMPEG${newQueue[0].filename}.mp3`, {
         volume: newQueue.volume / 100,
@@ -171,9 +185,13 @@ module.exports = {
         bitrate: 96,
       });
 
-      msg.channel.send('', { embed }).catch((err) => {
-        console.log(`[ERROR] Failed to send nowPlaying response! ${err}`);
-      });
+      const messageToDel = await msg.channel.send('', { embed }).catch((err) => { console.log(`[ERROR] Failed to send nowPlaying response! ${err}`); });
+      setTimeout(() => {
+        if (embed.delete) {
+          messageToDel.delete()
+                      .catch(e => console.log(`[ERROR] Failed to delete message: ${e}`));
+        }
+      }, 10000);
 
       dispatcher.on('end', () => {
         if (connection.channel.members.array().length <= 1) {
