@@ -29,9 +29,43 @@ module.exports = {
         title: 'Looping song',
         description: `Looping \`${mainModule.queue[msg.guild.id][0].title}\` Use ${CONFIG.prefix}loop to toggle off or skip the song to stop`,
         color: 7506394,
+        delete: true,
       };
     } else {
-      embed = await utils.getPlayResponse(client, newQueue[0].link, newQueue, msg).catch((err) => { console.log(`[ERROR] Failed to get playResponse data (in async call)! ${err}`); });
+      const thisQueue = mainModule.queue[msg.guild.id];
+      if (!thisQueue[0].usesFfmpeg) filters = 'None';
+      else filters = thisQueue[0].usesFfmpeg.join(', ');
+      embed = {
+        color: 7506394,
+        title: 'Playing song',
+        description: `Requested by ${thisQueue[0].author}`,
+        thumbnail: {
+          url: thisQueue[0].thumbnail,
+        },
+        fields: [{
+          name: 'Title',
+          value: thisQueue[0].title,
+          inline: false,
+        }, {
+          name: 'Length',
+          value: thisQueue[0].length,
+          inline: false,
+        }, {
+          name: 'Uploaded By',
+          value: thisQueue[0].uploader,
+          inline: false,
+        }, {
+          name: 'Video Stats',
+          value: `Likes: ${thisQueue[0].likes} Dislikes: ${thisQueue[0].dislikes} Views: ${thisQueue[0].views}`,
+          inline: false,
+        }, {
+          name: 'Filters',
+          value: filters,
+          inline: false,
+        }],
+
+      }
+      //embed = await utils.getPlayResponse(client, newQueue[0].link, newQueue, msg).catch((err) => { console.log(`[ERROR] Failed to get playResponse data (in async call)! ${err}`); });
     }
 
     newQueue[0].cached = await utils.fileExists(`./audio_cache/${newQueue[0].filename}`);
@@ -50,7 +84,11 @@ module.exports = {
 
           await downloader.processVideo(client, msg, newQueue[0].filename, newQueue[0].usesFfmpeg);
 
-          msg.channel.send('', { embed }).catch((err) => { console.log(`[ERROR] Failed to send nowPlaying response! ${err}`); });
+          const messageToDel = await msg.channel.send('', { embed }).catch((err) => { console.log(`[ERROR] Failed to send nowPlaying response! ${err}`); });
+          setTimeout(() => {
+            messageToDel.delete()
+                        .catch(e => console.log(`[ERROR] Failed to delete message: ${e}`));
+          }, 10000);
 
           const dispatcher = connection.play(`./ffmpeg_cache/FFMPEG${newQueue[0].filename}.mp3`, {
             volume: newQueue.volume / 100,

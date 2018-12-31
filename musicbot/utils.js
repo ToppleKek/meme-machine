@@ -50,7 +50,7 @@ module.exports = {
     if (type === 'admin') return msg.guild.member(usr).permissions.has('ADMINISTRATOR');
     else if (type === 'server') return msg.guild.member(usr).permissions.has('MANAGE_GUILD');
     else if (type === 'voice') {
-      return !!(msg.guild.member(usr).voiceChannel && msg.guild.member(usr).voiceChannel.id === msg.guild.voiceConnection.channel.id);
+      return !!(msg.guild.member(usr).voice.channel && msg.guild.member(usr).voice.channel.id === msg.guild.voiceConnection.channel.id);
     } else if (type === 'owner') {
       return usr.id === CONFIG.ownerid;
     }

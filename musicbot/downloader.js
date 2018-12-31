@@ -25,7 +25,7 @@ module.exports = {
       for (let i = 0; i < CONFIG.maxFilters; i += 1) {
         switch (type[i]) {
           case 'bass':
-            filters.push(`bass=g=${bassGain}:f=50`);
+            filters.push(`bass=g=${bassGain}:f=80`);
             break;
           case 'echo':
             filters.push('aecho=0.8:0.6:1000:0.8');
@@ -49,7 +49,7 @@ module.exports = {
       }
       // This is a mess
       console.log(`Started Processing, filters are: ${filters.join(',')}`);
-      exec(`ffmpeg -y -i "./audio_cache/${video}" -codec:a libmp3lame "./ffmpeg_cache/PREFFMPEG${video}.mp3"`, (err, stdout, stderr) => {
+      exec(`ffmpeg -y -i "./audio_cache/${video}" -codec:a libmp3lame "./ffmpeg_cache/PREFFMPEG${video}.mp3"`, {maxBuffer: Infinity}, (err, stdout, stderr) => {
         // We have to convert it to mp3 first because it errors out with vibrato if we don't
         if (err) {
           utils.logError(client, msg, 'FFMPEG ERROR', `Ffmpeg threw an error while processing a video! Error: ${err}`);
@@ -57,7 +57,7 @@ module.exports = {
           resolve('error');
         }
         console.log('[INFO] Converted video to mp3, now applying filters');
-        exec(`ffmpeg -y -i "./ffmpeg_cache/PREFFMPEG${video}.mp3" -codec:a libmp3lame -af ${filters.join(',')} "./ffmpeg_cache/FFMPEG${video}.mp3"`, (err, stdout, stderr) => {
+        exec(`ffmpeg -y -i "./ffmpeg_cache/PREFFMPEG${video}.mp3" -codec:a libmp3lame -af ${filters.join(',')} "./ffmpeg_cache/FFMPEG${video}.mp3"`, {maxBuffer: Infinity}, (err, stdout, stderr) => {
           console.log('Finished Processing');
           if (err) {
             utils.logError(client, msg, 'FFMPEG ERROR', `Ffmpeg threw an error while processing a video! Error: ${err}`);
